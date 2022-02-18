@@ -68,7 +68,7 @@ class ODE_RNN(Baseline):
 			data_and_mask = torch.cat([data, mask],-1)
 
 		_, _, latent_ys, _ = self.ode_gru.run_odernn(
-			data_and_mask, truth_time_steps, run_backwards = False)
+			data_and_mask, truth_time_steps, run_backwards = False, test = test)
 		
 		latent_ys = latent_ys.permute(0,2,1,3)
 		last_hidden = latent_ys[:,:,-1,:]

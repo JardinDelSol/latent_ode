@@ -105,7 +105,7 @@ class Baseline(nn.Module):
 		pred_x, info = self.get_reconstruction(batch_dict["tp_to_predict"], 
 			batch_dict["observed_data"], batch_dict["observed_tp"], 
 			mask = batch_dict["observed_mask"], n_traj_samples = n_traj_samples,
-			mode = batch_dict["mode"])
+			mode = batch_dict["mode"], test = test)
 
 		# Compute likelihood of all the points
 		likelihood = self.get_gaussian_likelihood(batch_dict["data_to_predict"], pred_x,

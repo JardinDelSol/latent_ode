@@ -203,6 +203,13 @@ class Encoder_z0_ODE_RNN(nn.Module):
 		   nn.Linear(100, self.z0_dim * 2),)
 		utils.init_network_weights(self.transform_z0)
 
+		self.decoder = nn.Sequential(
+			nn.Linear(latent_dim, n_gru_units),
+			nn.Tanh(),
+			nn.Linear(n_gru_units, input_dim),)
+
+		utils.init_network_weights(self.decoder)
+
 
 	def forward(self, data, time_steps, run_backwards = True, save_info = False):
 		# data, time_steps -- observations and their time stamps
