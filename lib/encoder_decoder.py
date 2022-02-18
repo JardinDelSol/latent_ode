@@ -314,6 +314,85 @@ class Encoder_z0_ODE_RNN(nn.Module):
 		assert(not torch.isnan(yi).any())
 		assert(not torch.isnan(yi_std).any())
 
+		return yi, yi_std, latent_ys, extra_info, yi_std, t_i
+
+	def extrap_odernn(self, data, time_steps, latent_ys, last_std, last_ti,
+		run_backwards = True, save_info = False, test = False):
+		# IMPORTANT: assumes that 'data' already has mask concatenated to it 
+
+		n_traj, n_tp, n_dims = data.size()
+		extra_info = []
+
+		t0 = time_steps[-1]
+		if run_backwards:
+			t0 = time_steps[0]
+
+		device = get_device(data)
+
+		prev_y = latent_ys[-1]
+		prev_std = last_std
+
+		prev_t, t_i = last_ti,  time_steps[-1]
+
+		interval_length = time_steps[-1] - time_steps[0]
+		minimum_step = interval_length / 50
+
+		#print("minimum step: {}".format(minimum_step))
+
+		assert(not torch.isnan(data).any())
+		assert(not torch.isnan(time_steps).any())
+
+		# Run ODE backwards and combine the y(t) estimates using gating
+		time_points_iter = range(0, len(time_steps))
+		if run_backwards:
+			time_points_iter = reversed(time_points_iter)
+
+		for i in time_points_iter:
+			if (prev_t - t_i) < minimum_step:
+				time_points = torch.stack((prev_t, t_i))
+				inc = self.z0_diffeq_solver.ode_func(prev_t, prev_y) * (t_i - prev_t)
+
+				assert(not torch.isnan(inc).any())
+
+				ode_sol = prev_y + inc
+				ode_sol = torch.stack((prev_y, ode_sol), 2).to(device)
+
+				assert(not torch.isnan(ode_sol).any())
+			else:
+				n_intermediate_tp = max(2, ((prev_t - t_i) / minimum_step).int())
+
+				time_points = utils.linspace_vector(prev_t, t_i, n_intermediate_tp)
+				ode_sol = self.z0_diffeq_solver(prev_y, time_points)
+
+				assert(not torch.isnan(ode_sol).any())
+
+			if torch.mean(ode_sol[:, :, 0, :]  - prev_y) >= 0.001:
+				print("Error: first point of the ODE is not equal to initial value")
+				print(torch.mean(ode_sol[:, :, 0, :]  - prev_y))
+				exit()
+			#assert(torch.mean(ode_sol[:, :, 0, :]  - prev_y) < 0.001)
+
+			yi_ode = ode_sol[:, :, -1, :]
+			xi = data[:,i,:].unsqueeze(0)
+			
+			yi, yi_std = self.GRU_update(yi_ode, prev_std, xi)
+
+			prev_y, prev_std = yi, yi_std			
+			prev_t, t_i = time_steps[i],  time_steps[i-1]
+
+			latent_ys.append(yi)
+
+			if save_info:
+				d = {"yi_ode": yi_ode.detach(), #"yi_from_data": yi_from_data,
+					 "yi": yi.detach(), "yi_std": yi_std.detach(), 
+					 "time_points": time_points.detach(), "ode_sol": ode_sol.detach()}
+				extra_info.append(d)
+
+		latent_ys = torch.stack(latent_ys, 1)
+
+		assert(not torch.isnan(yi).any())
+		assert(not torch.isnan(yi_std).any())
+
 		return yi, yi_std, latent_ys, extra_info
 
 
