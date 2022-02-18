@@ -71,14 +71,14 @@ def parse_datasets(args, device):
 	dataset = dataset.to(device)
 	time_steps_extrap = time_steps_extrap.to(device)
 
-	train_y, test_y = utils.split_train_test(dataset, train_fraq = 0.8)
+	train_y, test_y = utils.split_train_test(dataset, train_fraq = 0.8) # Train and test data are divided into 8:2 ratio
 
 	n_samples = len(dataset)
 	input_dim = dataset.size(-1)
 
 	batch_size = min(args.batch_size, args.n)
 	train_dataloader = DataLoader(train_y, batch_size = batch_size, shuffle=False,
-		collate_fn= lambda batch: basic_collate_fn(batch, time_steps_extrap, data_type = "train"))
+		collate_fn= lambda batch: basic_collate_fn(batch, time_steps_extrap, data_type = "train")) # The masking and other 
 	test_dataloader = DataLoader(test_y, batch_size = args.n, shuffle=False,
 		collate_fn= lambda batch: basic_collate_fn(batch, time_steps_extrap, data_type = "test"))
 	
