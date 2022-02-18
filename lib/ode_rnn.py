@@ -71,8 +71,8 @@ class ODE_RNN(Baseline):
 			data_and_mask, truth_time_steps, run_backwards = False)
 
 		if test:
-			_, _, latent_ys, _ = self.ode_gru.extrap_odernn(
-			data_and_mask, truth_time_steps, latent_ys, last_std, last_ti, run_backwards = False)
+			_, _, latent_ys = self.ode_gru.extrap_odernn(
+			data_and_mask, time_steps_to_predict, latent_ys, last_std, last_ti, self.decoder, run_backwards = False)
 		
 		latent_ys = latent_ys.permute(0,2,1,3)
 		last_hidden = latent_ys[:,:,-1,:]

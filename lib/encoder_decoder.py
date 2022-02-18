@@ -316,12 +316,11 @@ class Encoder_z0_ODE_RNN(nn.Module):
 
 		return yi, yi_std, latent_ys, extra_info, yi_std, t_i
 
-	def extrap_odernn(self, data, time_steps, latent_ys, last_std, last_ti,
+	def extrap_odernn(self, data, time_steps, latent_ys, last_std, last_ti, decoder,
 		run_backwards = True, save_info = False, test = False):
 		# IMPORTANT: assumes that 'data' already has mask concatenated to it 
 
 		n_traj, n_tp, n_dims = data.size()
-		extra_info = []
 
 		t0 = time_steps[-1]
 		if run_backwards:
@@ -344,8 +343,6 @@ class Encoder_z0_ODE_RNN(nn.Module):
 
 		# Run ODE backwards and combine the y(t) estimates using gating
 		time_points_iter = range(0, len(time_steps))
-		if run_backwards:
-			time_points_iter = reversed(time_points_iter)
 
 		for i in time_points_iter:
 			if (prev_t - t_i) < minimum_step:
@@ -373,7 +370,9 @@ class Encoder_z0_ODE_RNN(nn.Module):
 			#assert(torch.mean(ode_sol[:, :, 0, :]  - prev_y) < 0.001)
 
 			yi_ode = ode_sol[:, :, -1, :]
-			xi = data[:,i,:].unsqueeze(0)
+			# xi = data[:,i,:].unsqueeze(0)
+			xi = decoder(yi_ode)
+			xi[:,:,1] = torch.zeros_like(xi[:,:,1])
 			
 			yi, yi_std = self.GRU_update(yi_ode, prev_std, xi)
 
@@ -382,18 +381,12 @@ class Encoder_z0_ODE_RNN(nn.Module):
 
 			latent_ys.append(yi)
 
-			if save_info:
-				d = {"yi_ode": yi_ode.detach(), #"yi_from_data": yi_from_data,
-					 "yi": yi.detach(), "yi_std": yi_std.detach(), 
-					 "time_points": time_points.detach(), "ode_sol": ode_sol.detach()}
-				extra_info.append(d)
-
 		latent_ys = torch.stack(latent_ys, 1)
 
 		assert(not torch.isnan(yi).any())
 		assert(not torch.isnan(yi_std).any())
 
-		return yi, yi_std, latent_ys, extra_info
+		return yi, yi_std, latent_ys
 
 
 
