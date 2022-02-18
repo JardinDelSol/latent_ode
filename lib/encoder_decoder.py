@@ -238,7 +238,8 @@ class Encoder_z0_ODE_RNN(nn.Module):
 
 	def run_odernn(self, data, time_steps, 
 		run_backwards = True, save_info = False, test = False):
-		# IMPORTANT: assumes that 'data' already has mask concatenated to it 
+		# IMPORTANT: assumes that 'data' already has mask concatenated to it \
+		print("interpolation data shape:", data.shape)
 
 		n_traj, n_tp, n_dims = data.size()
 		extra_info = []
@@ -318,7 +319,8 @@ class Encoder_z0_ODE_RNN(nn.Module):
 
 	def extrap_odernn(self, data, time_steps, latent_ys, last_std, last_ti, decoder,
 		run_backwards = True, save_info = False, test = False):
-		# IMPORTANT: assumes that 'data' already has mask concatenated to it 
+		# IMPORTANT: assumes that 'data' already has mask concatenated to it
+		print("test data shape: ", data.shape)
 
 		n_traj, n_tp, n_dims = data.size()
 
@@ -370,8 +372,11 @@ class Encoder_z0_ODE_RNN(nn.Module):
 			#assert(torch.mean(ode_sol[:, :, 0, :]  - prev_y) < 0.001)
 
 			yi_ode = ode_sol[:, :, -1, :]
-			# xi = data[:,i,:].unsqueeze(0)
+			xi = data[:,i,:].unsqueeze(0)
+			print("xi shape:", xi.shape)
 			xi = decoder(yi_ode)
+			print("decoded xi shape:", xi.shape)
+
 			xi[:,:,1] = torch.zeros_like(xi[:,:,1])
 			
 			yi, yi_std = self.GRU_update(yi_ode, prev_std, xi)
