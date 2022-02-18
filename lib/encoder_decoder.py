@@ -237,7 +237,7 @@ class Encoder_z0_ODE_RNN(nn.Module):
 
 
 	def run_odernn(self, data, time_steps, 
-		run_backwards = True, save_info = False):
+		run_backwards = True, save_info = False, test = False):
 		# IMPORTANT: assumes that 'data' already has mask concatenated to it 
 
 		n_traj, n_tp, n_dims = data.size()

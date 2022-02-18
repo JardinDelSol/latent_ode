@@ -54,7 +54,7 @@ class ODE_RNN(Baseline):
 
 
 	def get_reconstruction(self, time_steps_to_predict, data, truth_time_steps, 
-		mask = None, n_traj_samples = None, mode = None):
+		mask = None, n_traj_samples = None, mode = None, test = False):
 
 		if (len(truth_time_steps) != len(time_steps_to_predict)) or (torch.sum(time_steps_to_predict - truth_time_steps) != 0):
 			raise Exception("Extrapolation mode not implemented for ODE-RNN")

@@ -488,7 +488,7 @@ def split_and_subsample_batch(data_dict, args, data_type = "train"):
 
 	else:
 		# Test set
-		if args.extrap:
+		if args.extrap or args.extraprnn:
 			processed_dict = split_data_extrap(data_dict, dataset = args.dataset)
 		else:
 			processed_dict = split_data_interp(data_dict)

@@ -98,7 +98,7 @@ class Baseline(nn.Module):
 
 
 	def compute_all_losses(self, batch_dict,
-		n_tp_to_sample = None, n_traj_samples = 1, kl_coef = 1.):
+		n_tp_to_sample = None, n_traj_samples = 1, kl_coef = 1., test = False):
 
 		# Condition on subsampled points
 		# Make predictions for all the points
