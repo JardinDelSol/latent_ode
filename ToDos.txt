@@ -1,0 +1,15 @@
+1. Check dataloader structure
+    - Intrapolation
+    - Extrapolation
+    * ODE-RNN has to be trained in intrapolation dataset, but should be tested on extrapolation dataset.
+
+2. Check plotting method
+    - Is it actually plotting extrapolation?
+    - If so, what would change if ODE-RNN was used
+
+3. Change method
+    - Training: use predicted value as an input for 50% of the time.
+    - Testing: use initial half to encode and predict the latter half (this is similar to that of what I've done in the past)
+
+4. Mask
+    - How is it being used?
