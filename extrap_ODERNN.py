@@ -142,54 +142,12 @@ if __name__ == '__main__':
 	##################################################################
 	# Create the model
 	obsrv_std = 0.01
-	if args.dataset == "hopper":
-		obsrv_std = 1e-3 
-
+	
 	obsrv_std = torch.Tensor([obsrv_std]).to(device)
 
 	z0_prior = Normal(torch.Tensor([0.0]).to(device), torch.Tensor([1.]).to(device))
 
-	if args.rnn_vae:
-		if args.poisson:
-			print("Poisson process likelihood not implemented for RNN-VAE: ignoring --poisson")
-
-		# Create RNN-VAE model
-		model = RNN_VAE(input_dim, args.latents, 
-			device = device, 
-			rec_dims = args.rec_dims, 
-			concat_mask = True, 
-			obsrv_std = obsrv_std,
-			z0_prior = z0_prior,
-			use_binary_classif = args.classif,
-			classif_per_tp = classif_per_tp,
-			linear_classifier = args.linear_classif,
-			n_units = args.units,
-			input_space_decay = args.input_decay,
-			cell = args.rnn_cell,
-			n_labels = n_labels,
-			train_classif_w_reconstr = (args.dataset == "physionet")
-			).to(device)
-
-
-	elif args.classic_rnn:
-		if args.poisson:
-			print("Poisson process likelihood not implemented for RNN: ignoring --poisson")
-
-		if args.extrap:
-			raise Exception("Extrapolation for standard RNN not implemented")
-		# Create RNN model
-		model = Classic_RNN(input_dim, args.latents, device, 
-			concat_mask = True, obsrv_std = obsrv_std,
-			n_units = args.units,
-			use_binary_classif = args.classif,
-			classif_per_tp = classif_per_tp,
-			linear_classifier = args.linear_classif,
-			input_space_decay = args.input_decay,
-			cell = args.rnn_cell,
-			n_labels = n_labels,
-			train_classif_w_reconstr = (args.dataset == "physionet")
-			).to(device)
-	elif args.ode_rnn:
+	if args.ode_rnn:
 		# Create ODE-GRU model
 		n_ode_gru_dims = args.latents
 				
@@ -219,10 +177,7 @@ if __name__ == '__main__':
 			n_labels = n_labels,
 			train_classif_w_reconstr = (args.dataset == "physionet")
 			).to(device)
-	elif args.latent_ode:
-		model = create_LatentODE_model(args, input_dim, z0_prior, obsrv_std, device, 
-			classif_per_tp = classif_per_tp,
-			n_labels = n_labels)
+
 	else:
 		raise Exception("Model not specified")
 
