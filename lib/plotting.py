@@ -319,7 +319,7 @@ class Visualizations():
 		device = get_device(time_steps)
 
 		time_steps_to_predict = time_steps
-		if isinstance(model, LatentODE):
+		if isinstance(model, LatentODE) or isinstance(model, ODE_RNN):
 			# sample at the original time points
 			time_steps_to_predict = utils.linspace_vector(time_steps[0], time_steps[-1], 100).to(device)
 
@@ -386,7 +386,7 @@ class Visualizations():
 		############################################
 		# Plot trajectories from prior
 		
-		if isinstance(model, LatentODE):
+		if isinstance(model, LatentODE) or isinstance(model, ODE_RNN):
 			torch.manual_seed(1991)
 			np.random.seed(1991)
 
