@@ -18,7 +18,7 @@
 02/18
 
 extrap_odernn 실행시 xi의 shape이 변형되어서 나오는 문제 발생.
-- data의 shape: batch, time point, data/mask 
+- data의 shape: batch size, # of time point, data/mask 
     - data size = 5000, batch size = 100 인 경우
         - train data: 100, 100, 2
         - test data의 경우 1000, 29, 2
@@ -31,6 +31,11 @@ extrap_odernn 실행시 xi의 shape이 변형되어서 나오는 문제 발생.
     
 - test 데이터의 batch 크기가 data size에 비례
 - time point의 개수가 29 + 29
+
+- n 옵션에 따른 time step의 수
+    - 30: 29
+    - 35: 19
+    - 32: 25
 
 test command
 python extrap_odernn.py --niters 100 -n 100 -b 10 -l 3 --dataset periodic --ode-rnn --noise-weight 0.5 --lr 0.01 --viz --rec-layers 2 --gen-layers 2 -u 100 -c 30 --extraprnn
