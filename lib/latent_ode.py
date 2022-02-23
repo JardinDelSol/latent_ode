@@ -94,8 +94,7 @@ class LatentODE(VAE_Baseline):
 			assert(torch.sum(int_lambda[0,0,-1,:] <= 0) == 0.)
 
 		pred_x = self.decoder(sol_y)
-		print("pred_x shape: ", pred_x.shape)
-		print("sol_y shape: ", sol_y.shape)
+
 
 		all_extra_info = {
 			"first_point": (first_point_mu, first_point_std, first_point_enc),

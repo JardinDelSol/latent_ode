@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"name": "latent_ode",
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.formatting.provider": "black"
+	}
+}

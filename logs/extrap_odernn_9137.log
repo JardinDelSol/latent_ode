@@ -1,0 +1,34 @@
+C:\Users\yujees\OneDrive - 중앙대학교\문서\Github\latent_ode\extrap_odernn.py
+extrap_odernn.py --niters 100 -n 100 -b 10 -l 3 --dataset periodic --ode-rnn --noise-weight 0.5 --lr 0.01 --rec-layers 2 --gen-layers 2 -u 100 -c 30 --extraprnn
+Experiment 9137
+Epoch 0001 [Test seq (cond on sampled tp)] | Loss 1607.373901 | Likelihood -1607.373901 | KL fp 0.0000 | FP STD 0.0000|
+KL coef: 0.0
+Train loss (one batch): 1122.2552490234375
+Train CE loss (one batch): 0.0
+Test MSE: 0.3222
+Poisson likelihood: 0.0
+CE loss: 0.0
+Experiment 9137
+Epoch 0002 [Test seq (cond on sampled tp)] | Loss 855.987488 | Likelihood -855.987488 | KL fp 0.0000 | FP STD 0.0000|
+KL coef: 0.0
+Train loss (one batch): 928.2271728515625
+Train CE loss (one batch): 0.0
+Test MSE: 0.1719
+Poisson likelihood: 0.0
+CE loss: 0.0
+Experiment 9137
+Epoch 0003 [Test seq (cond on sampled tp)] | Loss 707.956238 | Likelihood -707.956238 | KL fp 0.0000 | FP STD 0.0000|
+KL coef: 0.0
+Train loss (one batch): 658.4725952148438
+Train CE loss (one batch): 0.0
+Test MSE: 0.1423
+Poisson likelihood: 0.0
+CE loss: 0.0
+Experiment 9137
+Epoch 0004 [Test seq (cond on sampled tp)] | Loss 656.543030 | Likelihood -656.543030 | KL fp 0.0000 | FP STD 0.0000|
+KL coef: 0.0
+Train loss (one batch): 506.21417236328125
+Train CE loss (one batch): 0.0
+Test MSE: 0.1320
+Poisson likelihood: 0.0
+CE loss: 0.0
