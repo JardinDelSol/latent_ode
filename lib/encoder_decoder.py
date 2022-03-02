@@ -418,6 +418,7 @@ class Encoder_z0_ODE_RNN(nn.Module):
             # print("decoded xi mask shape:", xi.shape)
             # print("xi index 0", xi[:,:10,0])
             # print("xi index 1", xi[:,:10,1])
+            # asdfas df 
 
 
             xi[:, :, 1] = torch.zeros_like(xi[:, :, 1])
